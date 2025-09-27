@@ -11,8 +11,8 @@ export const getServiceById = async (id) => {
     attributes: ["id", "description", "nom", "horaire"],
     include: [
       {
-        model: "utilisateur",
-        attributes: ["id", "username"],
+        model: db.user,
+        attributes: ["id", "firstName", "lastName"],
       },
     ],
   });
@@ -27,8 +27,8 @@ export const getServices = async (values, transaction, search, employe_id) => {
     attributes: ["id", "nom", "description", "horaire"],
     include: [
       {
-        model: db.utilisateur,
-        attributes: ["id", "username"],
+        model: db.user,
+        attributes: ["id", "firstName", "lastName"],
       },
       {
         model: db.image,
@@ -48,20 +48,60 @@ export const getServices = async (values, transaction, search, employe_id) => {
   });
 };
 /**
- * Return Count Service
+ * Return Services Count
  */
-export const getCountService = async (
-  values,
-  transaction,
-  search,
-  employe_id,
-) => {
-  return await db.service.count({
+export const getCountService = async (values, transaction, search, employe_id) => {
+  return db.service.count({
     ...values,
+    transaction,
+    where: Sequelize.and(
+      employe_id ? { employe_id } : undefined,
+      search
+        ? {
+            nom: {
+              [Op.like]: `%${search}%`,
+            },
+          }
+        : undefined,
+    ),
+  });
+};
+
+/**
+ * Create Service
+ */
+export const createService = async (values, transaction) => {
+  return db.service.create(values, { transaction });
+};
+
+/**
+ * Update Service
+ */
+export const updateService = async (id, values, transaction) => {
+  return db.service.update(values, {
+    where: { id },
+    transaction,
+  });
+};
+
+/**
+ * Delete Service
+ */
+export const deleteService = async (id, transaction) => {
+  return db.service.destroy({
+    where: { id },
+    transaction,
+  });
+};
+
+/**
+ * Return Services Count
+ */
+export const getServicesCountForSearch = async (transaction, search) => {
+  return db.service.count({
     transaction,
     attributes: ["id"],
     where: Sequelize.and(
-      employe_id ? { employe_id } : undefined,
       search
         ? {
             nom: {
@@ -80,7 +120,7 @@ export default (sequelize, DataTypes) => {
       nom: DataTypes.STRING,
       description: DataTypes.STRING,
       horaire: DataTypes.TIME,
-      employe_id: DataTypes.INTEGER,
+      employe_id: DataTypes.STRING,
     },
     { timestamps: false },
   );

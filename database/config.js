@@ -10,9 +10,9 @@ module.exports = {
 
   development: {
     // url: 'jdbc:postgresql://localhost/fakademy-dev',
-    username: process.env.DB_USERNAME || "root",
+    username: process.env.DB_USERNAME || "amazoo_user",
     password: process.env.DB_PASSWORD || null,
-    database: process.env.DB_DATABASE || "database_test",
+    database: process.env.DB_DATABASE || "amazoo",
     host: process.env.DB_HOST || "127.0.0.1",
     operatorsAliases: 1,
     dialect: process.env.DB_DIALECT || "mysql",
@@ -26,7 +26,7 @@ module.exports = {
     },
   },
   test: {
-    username: process.env.DB_USERNAME || "root",
+    username: process.env.DB_USERNAME || "amazoo_user",
     password: process.env.DB_PASSWORD || null,
     database: process.env.DB_DATABASE || "database_test",
     host: process.env.DB_HOST || "127.0.0.1",
@@ -42,7 +42,7 @@ module.exports = {
     },
   },
   production: {
-    username: process.env.DB_USERNAME || "root",
+    username: process.env.DB_USERNAME || "amazoo_user",
     password: process.env.DB_PASSWORD || null,
     database: process.env.DB_DATABASE || "database_production",
     host: process.env.DB_HOST || "127.0.0.1",
