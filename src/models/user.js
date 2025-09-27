@@ -1,73 +1,105 @@
 "use strict";
 import db from "../models";
-
 import { Op } from "sequelize";
 import { Sequelize } from "sequelize-typescript";
+import { getViewsForUser } from "../controllers/users";
 
 /**
  * Return User By Id
  */
 export const getUserById = async (id) => {
-  return db.utilisateur.findByPk(id, {
-    attributes: ["id", "username", "type", "date_creation"],
+  return db.user.findByPk(id, {
+    attributes: ["id", "firstName", "lastName", "email", "country"],
   });
 };
 /**
  * Return Users
  */
-export const getUsers = async (values, transaction, search, role) => {
-  return await db.utilisateur.findAll({
+export const getUsers = async (values, transaction, search) => {
+  let users = await db.user.findAll({
     ...values,
     transaction,
-    attributes: ["id", "username", "type", "date_creation"],
-    where: Sequelize.and(
-      search
-        ? {
-            username: {
-              [Op.like]: `%${search}%`,
-            },
-          }
-        : undefined,
-      role
-        ? {
-            type: {
-              [Op.like]: `%${role}%`,
-            },
-          }
-        : undefined,
-    ),
+    attributes: ["id", "firstName", "lastName", "email", "country"],
+    where: search
+      ? {
+          [Op.or]: [
+            { firstName: { [Op.like]: `%${search}%` } },
+            { lastName: { [Op.like]: `%${search}%` } },
+            { email: { [Op.like]: `%${search}%` } },
+          ],
+        }
+      : undefined,
+  });
+  return users;
+};
+
+/**
+ * Return Users Count
+ */
+export const getUsersCount = async (transaction, search) => {
+  return db.user.count({
+    transaction,
+    where: search
+      ? {
+          [Op.or]: [
+            { firstName: { [Op.like]: `%${search}%` } },
+            { lastName: { [Op.like]: `%${search}%` } },
+            { email: { [Op.like]: `%${search}%` } },
+          ],
+        }
+      : undefined,
   });
 };
+
 /**
- * Return Count users
+ * Create User
  */
-export const getCountUsers = async (values, transaction, search, role) => {
-  return await db.utilisateur.count({
-    ...values,
+export const createUser = async (values, transaction) => {
+  return db.user.create(values, { transaction });
+};
+
+/**
+ * Update User
+ */
+export const updateUser = async (id, values, transaction) => {
+  return db.user.update(values, {
+    where: { id },
+    transaction,
+  });
+};
+
+/**
+ * Delete User
+ */
+export const deleteUser = async (id, transaction) => {
+  return db.user.destroy({
+    where: { id },
+    transaction,
+  });
+};
+
+/**
+ * Return Users Count
+ */
+export const getUsersCountForSearch = async (transaction, search) => {
+  return db.user.count({
     transaction,
     attributes: ["id"],
-    where: Sequelize.and(
-      search
-        ? {
-            username: {
-              [Op.like]: `%${search}%`,
-            },
-          }
-        : undefined,
-      role
-        ? {
-            type: {
-              [Op.like]: `%${role}%`,
-            },
-          }
-        : undefined,
-    ),
+    where: search
+      ? {
+          [Op.or]: [
+            { firstName: { [Op.like]: `%${search}%` } },
+            { lastName: { [Op.like]: `%${search}%` } },
+            { email: { [Op.like]: `%${search}%` } },
+          ],
+        }
+      : undefined,
     group: ["id"],
   });
 };
 export default (sequelize, DataTypes) => {
   return sequelize.define(
-    "utilisateur",
+    "user",
     {
       password: DataTypes.STRING,
       username: DataTypes.STRING,

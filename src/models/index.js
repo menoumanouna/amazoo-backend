@@ -59,16 +59,16 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 export const assoc = {
-  UserService: db.utilisateur.hasMany(db.service, {
+  UserService: db.user.hasMany(db.service, {
     foreignKey: "employe_id",
   }),
-  ServiceUser: db.service.belongsTo(db.utilisateur, {
+  ServiceUser: db.service.belongsTo(db.user, {
     foreignKey: "employe_id",
   }),
-  UserReports: db.utilisateur.hasMany(db.compte_rendu, {
+  UserReports: db.user.hasMany(db.compte_rendu, {
     foreignKey: "veterinaire_id",
   }),
-  ReportsUser: db.compte_rendu.belongsTo(db.utilisateur, {
+  ReportsUser: db.compte_rendu.belongsTo(db.user, {
     foreignKey: "veterinaire_id",
   }),
   ReportsAnimal: db.compte_rendu.belongsTo(db.animal, {
@@ -77,7 +77,7 @@ export const assoc = {
   AnimalComment: db.commentaire_animal.belongsTo(db.animal, {
     foreignKey: "animal_id",
   }),
-  UserComment: db.commentaire_animal.belongsTo(db.utilisateur, {
+  UserComment: db.commentaire_animal.belongsTo(db.user, {
     foreignKey: "utilisateur_id",
   }),
   HabitatAnimals: db.habitat.hasMany(db.animal, {
@@ -104,10 +104,10 @@ export const assoc = {
   NourritureComment0: db.nourriture.hasMany(db.commentaire_nourriture, {
     foreignKey: "nourriture_id",
   }),
-  UserNourritureComment0: db.utilisateur.hasMany(db.commentaire_nourriture, {
+  UserNourritureComment0: db.user.hasMany(db.commentaire_nourriture, {
     foreignKey: "utilisateur_id",
   }),
-  UserNourritureAnimal: db.commentaire_nourriture.belongsTo(db.utilisateur, {
+  UserNourritureAnimal: db.commentaire_nourriture.belongsTo(db.user, {
     foreignKey: "utilisateur_id",
   }),
 };
