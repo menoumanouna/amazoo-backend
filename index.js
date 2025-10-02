@@ -1,5 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
+import "./config/mongodb";
 // This will be our application entry. We'll setup our server here.
 import http from "http";
 import session from "express-session";
@@ -38,7 +39,7 @@ app.get("/fail", (req, res) => {
   });
 });
 
-const port = parseInt(process.env.PORT, 10) || 4000;
+const port = parseInt(process.env.PORT, 10) || 4002;
 app.set("port", port);
 
 server.listen(port, (err) => {
