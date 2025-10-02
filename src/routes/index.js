@@ -15,7 +15,8 @@ import CommentNourrituresRoutes from "./comment-nourriture";
 import NourrituresRoutes from "./nourriture";
 import ImageRoutes from "./images";
 import EmailRoutes from "./email";
-
+import mongodbRoutes from "./mongodb/views";
+// routes principaux
 const routes = express.Router();
 
 routes.use("/auth", AuthRoutes);
@@ -30,6 +31,7 @@ routes.use("/comment-nourriture", CommentNourrituresRoutes);
 routes.use("/nourritures", NourrituresRoutes);
 routes.use("/images", ImageRoutes);
 routes.use("/email", EmailRoutes);
+routes.use("/mongodb", mongodbRoutes);
 
 routes.all("*", (req, res, next) =>
   next(new APIError("Not Found!", HTTPStatus.NOT_FOUND, true)),
