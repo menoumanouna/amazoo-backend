@@ -8,18 +8,18 @@ import { getViewsForUser } from "../controllers/users";
  * Return User By Id
  */
 export const getUserById = async (id) => {
-  return db.user.findByPk(id, {
-    attributes: ["id", "firstName", "lastName", "email", "country"],
+  return db.users.findByPk(id, {
+    attributes: ["id", "firstName", "lastName", "email", "status"],
   });
 };
 /**
  * Return Users
  */
 export const getUsers = async (values, transaction, search) => {
-  let users = await db.user.findAll({
+  let users = await db.users.findAll({
     ...values,
     transaction,
-    attributes: ["id", "firstName", "lastName", "email", "country"],
+    attributes: ["id", "firstName", "lastName", "email", "status"],
     where: search
       ? {
           [Op.or]: [
@@ -37,7 +37,7 @@ export const getUsers = async (values, transaction, search) => {
  * Return Users Count
  */
 export const getUsersCount = async (transaction, search) => {
-  return db.user.count({
+  return db.users.count({
     transaction,
     where: search
       ? {
@@ -55,14 +55,14 @@ export const getUsersCount = async (transaction, search) => {
  * Create User
  */
 export const createUser = async (values, transaction) => {
-  return db.user.create(values, { transaction });
+  return db.users.create(values, { transaction });
 };
 
 /**
  * Update User
  */
 export const updateUser = async (id, values, transaction) => {
-  return db.user.update(values, {
+  return db.users.update(values, {
     where: { id },
     transaction,
   });
@@ -72,7 +72,7 @@ export const updateUser = async (id, values, transaction) => {
  * Delete User
  */
 export const deleteUser = async (id, transaction) => {
-  return db.user.destroy({
+  return db.users.destroy({
     where: { id },
     transaction,
   });
@@ -82,7 +82,7 @@ export const deleteUser = async (id, transaction) => {
  * Return Users Count
  */
 export const getUsersCountForSearch = async (transaction, search) => {
-  return db.user.count({
+  return db.users.count({
     transaction,
     attributes: ["id"],
     where: search
@@ -99,11 +99,13 @@ export const getUsersCountForSearch = async (transaction, search) => {
 };
 export default (sequelize, DataTypes) => {
   return sequelize.define(
-    "user",
+    "users",
     {
       password: DataTypes.STRING,
-      username: DataTypes.STRING,
-      type: DataTypes.ENUM("ADMIN", "EMPLOYE", "VETERINAIRE"),
+      email: DataTypes.STRING,
+      firstName: DataTypes.STRING,
+      lastName: DataTypes.STRING,
+      status: DataTypes.ENUM("ADMIN", "EMPLOYE", "VETERINAIRE"),
       date_creation: "created_at",
     },
     { timestamps: false },

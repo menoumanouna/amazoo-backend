@@ -11,7 +11,7 @@ export const getServiceById = async (id) => {
     attributes: ["id", "description", "nom", "horaire"],
     include: [
       {
-        model: db.user,
+        model: db.users,
         attributes: ["id", "firstName", "lastName"],
       },
     ],
@@ -27,7 +27,7 @@ export const getServices = async (values, transaction, search, employe_id) => {
     attributes: ["id", "nom", "description", "horaire"],
     include: [
       {
-        model: db.user,
+        model: db.users,
         attributes: ["id", "firstName", "lastName"],
       },
       {

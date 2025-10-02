@@ -25,7 +25,7 @@ export const getCommentsNourritures = async (
     attributes: ["id", "commentaire", "date_creation"],
     include: [
       {
-        model: db.utilisateur,
+        model: db.users,
         attributes: ["id", "username"],
       },
       {

@@ -17,7 +17,7 @@ export const getReportById = async (id) => {
     ],
     include: [
       {
-        model: db.utilisateur,
+        model: db.users,
         attributes: ["id", "username"],
       },
       {
@@ -45,7 +45,7 @@ export const getReports = async (values, transaction, search, animal_id) => {
     ],
     include: [
       {
-        model: db.utilisateur,
+        model: db.users,
         attributes: ["id", "username"],
       },
       {
