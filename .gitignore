@@ -1,0 +1,75 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+*.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+error.log
+
+# Build outputs
+dist/
+dev/
+build/
+*.bundle.js
+
+# Database
+*.sqlite
+*.db
+*.sql.backup
+
+# Uploads
+public/images/animals/*/
+public/images/habitats/*/
+public/images/service/*/
+!public/images/**/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Backup files
+*.backup
+*.backup2
+*.bak
+
+# Testing
+coverage/
+.nyc_output/
+
+# NPM
+npm-debug.log
+.npm
+
+# Misc
+*.pid
+*.seed
+*.pid.lock 
