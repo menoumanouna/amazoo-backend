@@ -29,7 +29,7 @@ export const validation = {
   },
   login: {
     body: {
-      username: Joi.string()
+      email: Joi.string()
         .email({
           minDomainSegments: 2,
         })
@@ -50,11 +50,11 @@ export const validation = {
 
 export async function login(req, res, next) {
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    const user = await db.utilisateur.findOne({
-      attributes: ["password", "id", "username", "type"],
-      where: { username },
+    const user = await db.users.findOne({
+      attributes: ["password", "id", "email", "status"],
+      where: { email },
     });
     if (!user) {
       throw new APIError(
@@ -68,8 +68,8 @@ export async function login(req, res, next) {
         const token = jwt.sign(
           {
             id: user.id,
-            username,
-            type: user.type,
+            email,
+            status: user.status,
           },
           config.JWT_SECRET,
           { expiresIn: config.JWT_EXPIRATION },
@@ -101,17 +101,17 @@ export async function refreshToken(req, res, next) {
     const decoded = jwt.verify(req.body.token, config.JWT_SECRET, {
       ignoreExpiration: true, //handled by OAuth2 server implementation
     });
-    if (decoded.username) {
-      const account = await db.utilisateur.findOne({
-        attributes: ["id", "username", "type"],
+    if (decoded.email) {
+      const account = await db.users.findOne({
+        attributes: ["id", "email", "status"],
         where: { email: decoded.email },
       });
 
       const token = jwt.sign(
         {
           id: account.id,
-          username: account.username,
-          type: account.type,
+          email: account.email,
+          status: account.status,
         },
         config.JWT_SECRET,
         { expiresIn: config.JWT_EXPIRATION },
@@ -149,8 +149,8 @@ export async function getMe(req, res, next) {
 export async function verification(req, res, next) {
   try {
     const { id, code } = req.params;
-    const user = await db.utilisateur.findOne({
-      attributes: ["type"],
+    const user = await db.users.findOne({
+      attributes: ["status"],
       where: { verificationCode: code, id },
     });
     if (!user) {
@@ -168,11 +168,11 @@ export async function verification(req, res, next) {
 export async function findUserByEmail(req, res, next) {
   try {
     let result;
-    const { username } = req.body;
+    const { email } = req.body;
     // Get User By Email
-    const userInfo = await db.utilisateur.findOne({
-      attributes: ["id", "username"],
-      where: { username },
+    const userInfo = await db.users.findOne({
+      attributes: ["id", "email"],
+      where: { email },
     });
     if (!userInfo)
       throw new APIError(
@@ -185,7 +185,7 @@ export async function findUserByEmail(req, res, next) {
         length: 6,
         charset: "numeric",
       });
-      await db.utilisateur.update(
+      await db.users.update(
         {
           password_reinit_code: code,
         },
@@ -235,7 +235,7 @@ export async function resetPassword(req, res, next) {
   try {
     const data = filteredBody(req.body, requestWhiteList.resetPassword);
     // Get User By Email
-    const userExist = await db.utilisateur.findOne({
+    const userExist = await db.users.findOne({
       where: { passwordCode: data.code },
     });
     if (!userExist) {
@@ -244,7 +244,7 @@ export async function resetPassword(req, res, next) {
     await db.sequelize.transaction(async (transaction) => {
       let password;
       if (data.password) password = passwordHash.generate(data.password);
-      const resultUser = await db.utilisateur.update(
+      const resultUser = await db.users.update(
         { password },
         { where: { id: userExist.id } },
         { transaction },

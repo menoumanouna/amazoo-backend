@@ -56,7 +56,7 @@ export async function getListUsers(req, res, next) {
       subQuery: false,
     };
     req.query.offset = offset;
-    const parsedValue = parse(req.query, db.utilisateur.rawAttributes);
+    const parsedValue = parse(req.query, db.users.rawAttributes);
     const values = {
       ...defaultValue,
       ...parsedValue,
@@ -94,7 +94,7 @@ export async function getListUsers(req, res, next) {
 export async function create(req, res, next) {
   try {
     const body = filteredBody(req.body, requestWhiteList.create);
-    const existUser = await db.utilisateur.findOne({
+    const existUser = await db.users.findOne({
       where: {
         username: body.username,
       },
@@ -109,7 +109,7 @@ export async function create(req, res, next) {
 
     let result;
     await db.sequelize.transaction(async (transaction) => {
-      result = await db.utilisateur.create(
+      result = await db.users.create(
         {
           ...body,
           username: body.username.toLowerCase(),
@@ -143,7 +143,7 @@ export async function update(req, res, next) {
   try {
     const { id } = req.params;
     const body = filteredBody(req.body, requestWhiteList.update);
-    const existUser = await db.utilisateur.findOne({
+    const existUser = await db.users.findOne({
       where: {
         id,
       },
@@ -155,7 +155,7 @@ export async function update(req, res, next) {
         "Utilisateur non existe",
       );
     }
-    const existUserName = await db.utilisateur.findOne({
+    const existUserName = await db.users.findOne({
       where: {
         username: body.username.toLowerCase(),
         id: {
@@ -172,7 +172,7 @@ export async function update(req, res, next) {
     }
     let result;
     await db.sequelize.transaction(async (transaction) => {
-      result = await db.utilisateur.update(
+      result = await db.users.update(
         {
           username: body.username.toLowerCase(),
         },
@@ -210,7 +210,7 @@ export async function destroy(req, res, next) {
     const { id } = req.params;
     let result;
     await db.sequelize.transaction(async (transaction) => {
-      result = await db.utilisateur.destroy({
+      result = await db.users.destroy({
         where: { id },
         transaction,
       });
